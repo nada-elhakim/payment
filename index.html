@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/styles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.js"
+      type="module"
+    ></script>
+
+    <style>
+      body {
+        font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+        height: 100vh;
+      }
+
+      a {
+        color: #00b7ff;
+      }
+
+      .container,
+      .content {
+        height: 100%;
+      }
+
+      #paymob {
+        background-color: #fdfdf6;
+        padding: 16px;
+      }
+
+      div.copyrights_elementsContainer__n9fhi {
+        display: none;
+        visibility: hidden;
+      }
+
+      img[alt='cvv info'] {
+        display: none;
+        visibility: hidden;
+      }
+
+      div:has(> img[alt='paymob']) {
+        display: none;
+      }
+
+      #payFromOutsideButton {
+        padding: 16px;
+        background: #2b772b;
+        color: white;
+        border-radius: 25px;
+        height: 50px;
+        width: calc(100% - 32px);
+        display: block;
+        margin: auto;
+      }
+
+      #payFromOutsideButton:hover,
+      #payFromOutsideButton:focus {
+        background-color: #0e3b0e;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="content">
+        <div id="paymob"></div>
+        <button id="payFromOutsideButton">
+          <p id="payText"></p>
+        </button>
+      </div>
+    </div>
+    <script>
+      window.onload = function () {
+        const button = document.getElementById('payFromOutsideButton');
+        const payText = document.getElementById('payText');
+        const paymentFlowType = window.paymentFlowType;
+
+        if (paymentFlowType === 'SaveCard') {
+          payText.innerText = 'Save card';
+        } else {
+          payText.innerText = 'Pay';
+        }
+
+        // alert(JSON.stringify(window.token));
+        new Pixel({
+          publicKey: 'egy_pk_test_ypEN3zdh4HnJSJ7z0hGo8zSQ1mDRFWyX',
+          afterPaymentComplete: async (response) => {
+            // alert(JSON.stringify(response));
+            // Remove button loading here
+            // payText.innerText = 'Pay';
+            alert('success');
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({ afterPaymentComplete: response })
+            );
+          },
+          clientSecret: window.token,
+          paymentMethods: ['card'],
+          elementId: 'paymob',
+          disablePay: true,
+          forceSaveCard: paymentFlowType === 'SaveCard',
+          showSaveCard: paymentFlowType !== 'SaveCard',
+          customStyle: {
+            Font_Family: 'Gotham',
+            Font_Size_Label: '16',
+            Font_Size_Input_Fields: '16',
+            Font_Size_Payment_Button: '14',
+            Font_Weight_Label: 400,
+            Font_Weight_Input_Fields: 200,
+            Font_Weight_Payment_Button: 600,
+            Color_Container: '#FFF',
+            Color_Border_Input_Fields: '#D0D5DD',
+            Color_Border_Payment_Button: '#A1B8FF',
+            Radius_Border: '8',
+            Color_Disabled: '#A1B8FF',
+            Color_Error: '#CC1142',
+            Color_Primary: '#2B772B',
+            Color_Input_Fields: '#FFF',
+            Text_Color_For_Label: '#000',
+            Text_Color_For_Payment_Button: '#FFF',
+            Text_Color_For_Input_Fields: '#000',
+            Color_For_Text_Placeholder: '#667085',
+            Width_of_Container: '100%',
+            Vertical_Padding: '40',
+          },
+        });
+        button?.addEventListener('click', function () {
+          // Calling pay request
+          // Add button loading here
+          const event = new Event('payFromOutside');
+          window.dispatchEvent(event);
+          payText.innerText = 'Loading...';
+        });
+      };
+    </script>
+  </body>
+</html>
