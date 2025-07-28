@@ -193,6 +193,7 @@
           payText.innerText = 'Loading...';
         });
         document.querySelectorAll('[class*="copyrights_logo"]').forEach((el) => {
+          console.log('foreach', el);
           el.style.display = 'none';
         });
       };
