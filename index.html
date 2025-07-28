@@ -16,7 +16,8 @@
     ></script>
 
     <style>
-      html, body {
+      html,
+      body {
         font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
         height: 100%;
         overflow: auto;
@@ -67,12 +68,12 @@
       #payFromOutsideButton:focus {
         background-color: #0e3b0e;
       }
-      
-      img[class*="copyrights_logo"] {
+
+      img[class*='copyrights_logo'] {
         display: none;
       }
 
-      img[alt="paymob"] {
+      img[alt='paymob'] {
         display: none;
       }
     </style>
@@ -91,6 +92,7 @@
         const button = document.getElementById('payFromOutsideButton');
         const payText = document.getElementById('payText');
         const paymentFlowType = window.paymentFlowType;
+        const language = window.language;
 
         if (paymentFlowType === 'SaveCard') {
           payText.innerText = 'Save card';
@@ -117,6 +119,48 @@
           forceSaveCard: paymentFlowType === 'SaveCard',
           showSaveCard: paymentFlowType !== 'SaveCard',
           customStyle: {
+            ...(language === 'ar' && {
+              Direction: 'rtl',
+              Label_Text: {
+                cardLabel: 'بيانات البطاقة',
+                savedCardsLabel: 'البطاقات المحفوطة',
+                saveCardConsentLabel: 'حفظ البطاقة',
+                cardEndingLabel: 'تنتهي بـ',
+              },
+              Placeholder_Text: {
+                holderName: 'الاسم علي البطاقة',
+                cardNumber: 'رقم البطاقة',
+                expiryDate: 'سنة / شهر',
+                securityCode: '(CVV) الرمز الامني',
+              },
+              Error_Text: {
+                holderName: 'مطلوب اسم حامل البطاقة',
+                cardNumber: {
+                  required: 'مطلوب رقم البطاقة',
+                  invalid: 'رقم البطاقة غير صحيح',
+                },
+                expiryDate: {
+                  required: 'مطلوب تاريخ انتهاء الصلاحية',
+                  invalid: 'تاريخ انتهاء الصلاحية غير صحيح',
+                },
+              },
+              Button_Text: {
+                viewSavedCardsBtn: 'عرض البطاقات المحفوظة',
+                addNewCardBtn: 'إضافة بطاقة جديدة',
+                payBtn: 'ادفع',
+              },
+              Hint_Text: {
+                saveCardConsentHint:
+                  'سيتم حفظ تفاصيل البطاقة لاستخدامها في المستقبل.',
+                cvvModalTitle: 'رمز CVV',
+                cvvVisaMastercardQuestion: 'هل لديك بطاقة ماستركارد أو فيزا؟',
+                cvvVisaMastercardHint:
+                  'هو رمز مكون من 3 أرقام موجود على ظهر البطاقة.',
+                cvvAmexQuestion: 'هل لديك بطاقة أمريكان إكسبريس؟',
+                cvvAmexHint:
+                  'هو رمز مكون من 4 أرقام موجود في الجهة الأمامية فوق رقم البطاقة.',
+              },
+            }),
             Font_Family: 'Gotham',
             Font_Size_Label: '16',
             Font_Size_Input_Fields: '16',
