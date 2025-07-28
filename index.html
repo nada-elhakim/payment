@@ -70,11 +70,7 @@
         background-color: #0e3b0e;
       }
 
-      img[class*="copyrights_logo"] {
-        display: none;
-      }
-
-       #paymob img[class*="copyrights_logo"] {
+      #paymob img[class*="copyrights_logo"] {
         display: none !important;
       }
 
@@ -97,12 +93,12 @@
         const button = document.getElementById('payFromOutsideButton');
         const payText = document.getElementById('payText');
         const paymentFlowType = window.paymentFlowType;
-        const language = window.language || 'en';
+        const language = window.language;
 
         if (paymentFlowType === 'SaveCard') {
-          payText.innerText = language === 'ar' ? 'حفظ البطاقة' : 'Save card';
+          payText.innerText = 'Save card';
         } else {
-          payText.innerText = language === 'ar' ? 'ادفع' : 'Pay';
+          payText.innerText = 'Pay';
         }
 
         // alert(JSON.stringify(window.token));
@@ -117,7 +113,7 @@
               JSON.stringify({ afterPaymentComplete: response })
             );
           },
-          clientSecret: window.token || 'egy_csk_test_11d569a458297c7f783a2d92a886dab5',
+          clientSecret: 'egy_csk_test_11d569a458297c7f783a2d92a886dab5',
           paymentMethods: ['card'],
           elementId: 'paymob',
           disablePay: true,
@@ -205,10 +201,20 @@
 
     <script>
       // Hide Paymob logo
-       const component = document.querySelector('#shadow-root');
-      console.log('component', component)
-      const shadow = component.shadowRoot; // ✅ available in open mode
-      shadow.querySelector('img').style.display = 'none';
+      const host = document.getElementById('paymob');
+      console.log('host', host)
+      const shadowRoot = host.shadowRoot;
+      if (shadowRoot) {
+        // You can now query inside the shadow DOM
+        // const innerElement = shadowRoot.querySelector('.something-inside-shadow-dom');
+        // console.log(innerElement);
+        shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
+          img.style.display = "none";
+        });
+      } else {
+        console.warn('No shadow root found!');
+      }
+      // shadow.querySelector('img').style.display = 'none';
       // document.querySelectorAll("[class='paymob']").forEach((img) => {
       //   img.style.display = "none";
       // });
