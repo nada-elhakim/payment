@@ -70,7 +70,7 @@
         background-color: #0e3b0e;
       }
 
-      img[class*='copyrights_logo'] {
+      img[class*="copyrights_logo"] {
         display: none;
       }
 
@@ -192,20 +192,26 @@
           window.dispatchEvent(event);
           payText.innerText = 'Loading...';
         });
+        document.querySelectorAll('[class*="copyrights_logo"]').forEach((el) => {
+          el.style.display = 'none';
+        });
       };
     </script>
 
     <script>
       // Hide Paymob logo
-      document.querySelectorAll("img[alt='paymob']").forEach((img) => {
-        img.style.display = "none";
-      });
-      document.querySelectorAll('img[alt="paymob"]').forEach((img) => {
-        const prev = img.previousElementSibling;
-        if (prev && prev.textContent.trim().length > 0) {
-          prev.style.display = 'none';
-        }
-      });
+      // document.querySelectorAll("[class='paymob']").forEach((img) => {
+      //   img.style.display = "none";
+      // });
+      // document.querySelectorAll('[class*="copyrights_logo"]').forEach((el) => {
+      //   el.style.display = 'none';
+      // });
+      // document.querySelectorAll('img[alt="paymob"]').forEach((img) => {
+      //   const prev = img.previousElementSibling;
+      //   if (prev && prev.textContent.trim().length > 0) {
+      //     prev.style.display = 'none';
+      //   }
+      // });
     </script>
   </body>
 </html>
