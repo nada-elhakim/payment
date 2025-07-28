@@ -70,7 +70,7 @@
         background-color: #0e3b0e;
       }
 
-      #paymob img[class*="copyrights_logo"] {
+      #paymob img[class*='copyrights_logo'] {
         display: none !important;
       }
 
@@ -192,41 +192,23 @@
           window.dispatchEvent(event);
           payText.innerText = 'Loading...';
         });
-        document.querySelectorAll('[class*="copyrights_logo"]').forEach((el) => {
-          console.log('foreach', el);
-          el.style.display = 'none';
-        });
       };
     </script>
 
     <script>
       // Hide Paymob logo
-      const host = document.getElementById('paymob');
-      console.log('host', host)
-      const shadowRoot = host.shadowRoot;
-      if (shadowRoot) {
-        // You can now query inside the shadow DOM
-        // const innerElement = shadowRoot.querySelector('.something-inside-shadow-dom');
-        // console.log(innerElement);
-        shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
-          img.style.display = "none";
-        });
-      } else {
-        console.warn('No shadow root found!');
+      const elements = document.querySelectorAll('#paymob div');
+      if (elements.length > 0) {
+        const host = elements[0];
+        const shadowRoot = host.shadowRoot;
+        if (shadowRoot) {
+          shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
+            img.style.display = 'none';
+          });
+        } else {
+          console.warn('No shadow root found!');
+        }
       }
-      // shadow.querySelector('img').style.display = 'none';
-      // document.querySelectorAll("[class='paymob']").forEach((img) => {
-      //   img.style.display = "none";
-      // });
-      // document.querySelectorAll('[class*="copyrights_logo"]').forEach((el) => {
-      //   el.style.display = 'none';
-      // });
-      // document.querySelectorAll('img[alt="paymob"]').forEach((img) => {
-      //   const prev = img.previousElementSibling;
-      //   if (prev && prev.textContent.trim().length > 0) {
-      //     prev.style.display = 'none';
-      //   }
-      // });
     </script>
   </body>
 </html>
