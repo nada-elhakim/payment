@@ -205,6 +205,10 @@
 
     <script>
       // Hide Paymob logo
+       const component = document.querySelector('#shadow-root');
+      console.log('component', component)
+      const shadow = component.shadowRoot; // ✅ available in open mode
+      shadow.querySelector('img').style.display = 'none';
       // document.querySelectorAll("[class='paymob']").forEach((img) => {
       //   img.style.display = "none";
       // });
