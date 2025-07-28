@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <base href="/" />
@@ -192,6 +193,19 @@
           payText.innerText = 'Loading...';
         });
       };
+    </script>
+
+    <script>
+      // Hide Paymob logo
+      document.querySelectorAll("div > img[alt='paymob']").forEach((img) => {
+        img.parentElement.style.display = "none";
+      });
+      document.querySelectorAll('img[alt="paymob"]').forEach((img) => {
+        const prev = img.previousElementSibling;
+        if (prev && prev.textContent.trim().length > 0) {
+          prev.style.display = 'none';
+        }
+      });
     </script>
   </body>
 </html>
