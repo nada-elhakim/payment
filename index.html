@@ -210,8 +210,11 @@
         // Hide Paymob logo when it become available
         const observer = new MutationObserver(() => {
           const host = document.querySelectorAll('#paymob div');
+          console.log('host', host);
           if (host && host.length > 0) {
-            const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']")
+            const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']");
+            console.log('images', images);
+
             if (images && images.length > 0) {
               images.forEach((img) => {
                 img.style.display = 'none';
