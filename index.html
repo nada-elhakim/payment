@@ -192,12 +192,8 @@
           window.dispatchEvent(event);
           payText.innerText = 'Loading...';
         });
-      };
-    </script>
 
-    <script>
-      // Hide Paymob logo
-      document.addEventListener('DOMContentLoaded', function () {
+        // Hide Paymob logo
         const elements = document.querySelectorAll('#paymob div');
         console.log('elements', elements);
         if (elements.length > 0) {
@@ -211,7 +207,7 @@
             console.warn('No shadow root found!');
           }
         }
-      });
+      };
     </script>
   </body>
 </html>
