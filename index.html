@@ -192,32 +192,20 @@
           window.dispatchEvent(event);
           payText.innerText = 'Loading...';
         });
-
-        // Hide Paymob logo
-        // const elements = document.querySelectorAll('#paymob div');
-        // console.log('elements', elements);
-        // if (elements.length > 0) {
-        //   const host = elements[0];
-        //   const shadowRoot = host.shadowRoot;
-        //   if (shadowRoot) {
-        //     shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
-        //       img.style.display = 'none';
-        //     });
-        //   } else {
-        //     console.warn('No shadow root found!');
-        //   }
-        // }
-        // Hide Paymob logo when it become available
+        
+        // Hide Paymob logo when it becomes available
         const observer = new MutationObserver(() => {
           const host = document.querySelectorAll('#paymob div');
-          console.log('host', host);
           if (host && host.length > 0) {
             const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']");
-            console.log('images', images);
-
             if (images && images.length > 0) {
               images.forEach((img) => {
-                img.style.display = 'none';
+                img.style.setProperty('display', 'none', 'important');
+                // img.style.display = 'none';
+                const prev = img.previousElementSibling;
+                if (prev?.tagName === 'P') {
+                  prev.style.display = 'none';
+                }
               });
               // el.style.display = 'none';
               observer.disconnect(); // Stop once it's found
