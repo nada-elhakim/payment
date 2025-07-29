@@ -194,22 +194,27 @@
         });
 
         // Hide Paymob logo when it becomes available
+        let count = 0;
         const interval = setInterval(() => {
           const host = document.querySelector('#paymob div');
+          count++;
         
           // Wait for shadow root
           if (host && host.shadowRoot) {
+        
             const images = host.shadowRoot.querySelectorAll("img[class*='copyrights_logo']");
-            console.log('Found', images.length, 'images');
         
             if (images.length > 0) {
               images.forEach((img) => {
                 img.parentElement?.remove();
               });
-        
-              // clearInterval(interval); // Stop checking
             }
           }
+
+          if (count >= 3 && host) {
+            clearInterval(interval); // Stop checking
+          }
+    
         }, 200); // Check every 200ms
       };
     </script>
