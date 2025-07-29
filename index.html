@@ -40,19 +40,19 @@
         padding: 16px;
       }
 
-      div.copyrights_elementsContainer__n9fhi {
-        display: none;
-        visibility: hidden;
-      }
+      /*div.copyrights_elementsContainer__n9fhi {*/
+      /*  display: none;*/
+      /*  visibility: hidden;*/
+      /*}*/
 
       img[alt='cvv info'] {
         display: none;
         visibility: hidden;
       }
 
-      div:has(> img[alt='paymob']) {
-        display: none;
-      }
+      /*div:has(> img[alt='paymob']) {*/
+      /*  display: none;*/
+      /*}*/
 
       #payFromOutsideButton {
         padding: 16px;
@@ -70,13 +70,13 @@
         background-color: #0e3b0e;
       }
 
-      #paymob img[class*='copyrights_logo'] {
-        display: none !important;
-      }
-
-      #paymob img[alt='paymob'] {
-        display: none !important;
-      }
+      /*#paymob img[class*='copyrights_logo'] {*/
+      /*  display: none !important;*/
+      /*}*/
+      
+      /*#paymob img[alt='paymob'] {*/
+      /*  display: none !important;*/
+      /*}*/
     </style>
   </head>
   <body>
@@ -192,16 +192,14 @@
           window.dispatchEvent(event);
           payText.innerText = 'Loading...';
         });
-        
+
         // Hide Paymob logo when it becomes available
         const observer = new MutationObserver(() => {
           const host = document.querySelectorAll('#paymob div');
           if (host && host.length > 0) {
             const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']");
-            console.log('images', images);
             if (images && images.length > 0) {
               images.forEach((img) => {
-                console.log('img', img);
                 img.style.setProperty('display', 'none', 'important');
                 // img.style.display = 'none';
                 const prev = img.previousElementSibling;
@@ -209,6 +207,7 @@
                   prev.style.display = 'none';
                 }
               });
+              // el.style.display = 'none';
               observer.disconnect(); // Stop once it's found
             }
           }
