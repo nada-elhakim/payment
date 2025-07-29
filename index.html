@@ -197,18 +197,21 @@
 
     <script>
       // Hide Paymob logo
-      const elements = document.querySelectorAll('#paymob div');
-      if (elements.length > 0) {
-        const host = elements[0];
-        const shadowRoot = host.shadowRoot;
-        if (shadowRoot) {
-          shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
-            img.style.display = 'none';
-          });
-        } else {
-          console.warn('No shadow root found!');
+      document.addEventListener('DOMContentLoaded', function () {
+        const elements = document.querySelectorAll('#paymob div');
+        console.log('elements', elements);
+        if (elements.length > 0) {
+          const host = elements[0];
+          const shadowRoot = host.shadowRoot;
+          if (shadowRoot) {
+            shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
+              img.style.display = 'none';
+            });
+          } else {
+            console.warn('No shadow root found!');
+          }
         }
-      }
+      });
     </script>
   </body>
 </html>
