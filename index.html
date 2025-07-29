@@ -200,10 +200,12 @@
             const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
             console.log('images', images);
             if (images && images.length > 0) {
-              images.forEach((img) => {
-                img.parentElement?.remove();
-              });
-              observer.disconnect(); // Stop once it's found
+              setTimeout(() => {
+                images.forEach((img) => {
+                  img.parentElement?.remove();
+                });
+                observer.disconnect(); // Stop once it's found
+              }, 2000);
             }
           }
         });
