@@ -208,6 +208,19 @@
           }
         }
       };
+      // Hide Paymob logo when it become available
+      const observer = new MutationObserver(() => {
+        const images = document.querySelectorAll('#paymob div')?.shadowRoot?.querySelectorAll("img[alt='paymob']");
+        if (images && images.length > 0) {
+          images.forEach((img) => {
+            img.style.display = 'none';
+          });
+          // el.style.display = 'none';
+          observer.disconnect(); // Stop once it's found
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
     </script>
   </body>
 </html>
