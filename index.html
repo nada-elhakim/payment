@@ -194,17 +194,37 @@
         });
 
         // Hide Paymob logo when it becomes available
-        setTimeout(() => {
-          const host = document.querySelectorAll('#paymob div');
-          if (host && host.length > 0) {
-            const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
-            if (images && images.length > 0) {
+        const interval = setInterval(() => {
+          const host = document.querySelector('#paymob div');
+        
+          // Wait for shadow root
+          if (host && host.shadowRoot) {
+            const images = host.shadowRoot.querySelectorAll("img[class*='copyrights_logo']");
+            console.log('Found', images.length, 'images');
+        
+            if (images.length > 0) {
               images.forEach((img) => {
-                img.parentElement?.remove();
+                const parent = img.parentElement;
+                if (parent) {
+                  parent.style.display = 'none';
+                }
               });
+        
+              clearInterval(interval); // Stop checking
             }
           }
-        }, 1000);
+        }, 200); // Check every 200ms
+        // setTimeout(() => {
+        //   const host = document.querySelectorAll('#paymob div');
+        //   if (host && host.length > 0) {
+        //     const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
+        //     if (images && images.length > 0) {
+        //       images.forEach((img) => {
+        //         img.parentElement?.remove();
+        //       });
+        //     }
+        //   }
+        // }, 1000);
       };
     </script>
   </body>
