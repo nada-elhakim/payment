@@ -198,6 +198,7 @@
           const host = document.querySelectorAll('#paymob div');
           if (host && host.length > 0) {
             const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
+            console.log('images', images);
             if (images && images.length > 0) {
               images.forEach((img) => {
                 img.parentElement?.remove();
