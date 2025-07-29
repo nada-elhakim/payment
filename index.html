@@ -194,33 +194,36 @@
         });
 
         // Hide Paymob logo
-        const elements = document.querySelectorAll('#paymob div');
-        console.log('elements', elements);
-        if (elements.length > 0) {
-          const host = elements[0];
-          const shadowRoot = host.shadowRoot;
-          if (shadowRoot) {
-            shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
-              img.style.display = 'none';
-            });
-          } else {
-            console.warn('No shadow root found!');
+        // const elements = document.querySelectorAll('#paymob div');
+        // console.log('elements', elements);
+        // if (elements.length > 0) {
+        //   const host = elements[0];
+        //   const shadowRoot = host.shadowRoot;
+        //   if (shadowRoot) {
+        //     shadowRoot.querySelectorAll("img[alt='paymob']").forEach((img) => {
+        //       img.style.display = 'none';
+        //     });
+        //   } else {
+        //     console.warn('No shadow root found!');
+        //   }
+        // }
+        // Hide Paymob logo when it become available
+        const observer = new MutationObserver(() => {
+          const host = document.querySelectorAll('#paymob div');
+          if (host && host.length > 0) {
+            const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']")
+            if (images && images.length > 0) {
+              images.forEach((img) => {
+                img.style.display = 'none';
+              });
+              // el.style.display = 'none';
+              observer.disconnect(); // Stop once it's found
+            }
           }
-        }
-      };
-      // Hide Paymob logo when it become available
-      const observer = new MutationObserver(() => {
-        const images = document.querySelectorAll('#paymob div')?.shadowRoot?.querySelectorAll("img[alt='paymob']");
-        if (images && images.length > 0) {
-          images.forEach((img) => {
-            img.style.display = 'none';
-          });
-          // el.style.display = 'none';
-          observer.disconnect(); // Stop once it's found
-        }
-      });
+        });
 
-      observer.observe(document.body, { childList: true, subtree: true });
+        observer.observe(document.body, { childList: true, subtree: true });
+      };
     </script>
   </body>
 </html>
