@@ -73,7 +73,7 @@
       /*#paymob img[class*='copyrights_logo'] {*/
       /*  display: none !important;*/
       /*}*/
-      
+
       /*#paymob img[alt='paymob'] {*/
       /*  display: none !important;*/
       /*}*/
@@ -197,15 +197,18 @@
         const observer = new MutationObserver(() => {
           const host = document.querySelectorAll('#paymob div');
           if (host && host.length > 0) {
-            const images = host[0].shadowRoot?.querySelectorAll("img[alt='paymob']");
+            const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
+            console.log('images', images);
             if (images && images.length > 0) {
               images.forEach((img) => {
-                img.style.setProperty('display', 'none', 'important');
+                // img.style.setProperty('display', 'none', 'important');
                 // img.style.display = 'none';
-                const prev = img.previousElementSibling;
-                if (prev?.tagName === 'P') {
-                  prev.style.display = 'none';
-                }
+                const parent = img.parentElement;
+                parent.style.display = 'none';
+                // const prev = img.previousElementSibling;
+                // if (prev?.tagName === 'P') {
+                //   prev.style.display = 'none';
+                // }
               });
               // el.style.display = 'none';
               observer.disconnect(); // Stop once it's found
