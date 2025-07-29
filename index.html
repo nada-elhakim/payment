@@ -204,27 +204,13 @@
         
             if (images.length > 0) {
               images.forEach((img) => {
-                const parent = img.parentElement;
-                if (parent) {
-                  parent.style.display = 'none';
-                }
+                img.parentElement?.remove();
               });
         
-              clearInterval(interval); // Stop checking
+              // clearInterval(interval); // Stop checking
             }
           }
         }, 200); // Check every 200ms
-        // setTimeout(() => {
-        //   const host = document.querySelectorAll('#paymob div');
-        //   if (host && host.length > 0) {
-        //     const images = host[0].shadowRoot?.querySelectorAll("img[class*='copyrights_logo']");
-        //     if (images && images.length > 0) {
-        //       images.forEach((img) => {
-        //         img.parentElement?.remove();
-        //       });
-        //     }
-        //   }
-        // }, 1000);
       };
     </script>
   </body>
