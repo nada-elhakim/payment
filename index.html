@@ -93,27 +93,28 @@
         const button = document.getElementById('payFromOutsideButton');
         const payText = document.getElementById('payText');
         const paymentFlowType = window.paymentFlowType;
-        const language = window.language;
+        const language = window.language || 'en';
+        const publicKey = window.publicKey;
+        const secretKey = window.token;
 
         if (paymentFlowType === 'SaveCard') {
-          payText.innerText = 'Save card';
+          payText.innerText = language === 'en' ? 'Save card' : 'حفظ';
         } else {
-          payText.innerText = 'Pay';
+          payText.innerText = language === 'en' ? 'Pay': 'دفع';
         }
 
-        // alert(JSON.stringify(window.token));
         new Pixel({
-          publicKey: 'egy_pk_test_ypEN3zdh4HnJSJ7z0hGo8zSQ1mDRFWyX',
+          publicKey,
           afterPaymentComplete: async (response) => {
             // alert(JSON.stringify(response));
             // Remove button loading here
             // payText.innerText = 'Pay';
-            alert('success');
+            // alert('success');
             window.ReactNativeWebView.postMessage(
               JSON.stringify({ afterPaymentComplete: response })
             );
           },
-          clientSecret: window.token || 'egy_csk_test_11d569a458297c7f783a2d92a886dab5',
+          clientSecret: secretKey || 'egy_csk_test_11d569a458297c7f783a2d92a886dab5',
           paymentMethods: ['card'],
           elementId: 'paymob',
           disablePay: true,
