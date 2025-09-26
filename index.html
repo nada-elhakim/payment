@@ -96,7 +96,6 @@
         const language = window.language || 'en';
         const publicKey = window.publicKey || '';
         const secretKey = window.token || '';
-        const isMonthlyDonation = window.isMonthlyDonation || false;
 
         if (paymentFlowType === 'SaveCard') {
           payText.innerText = language === 'en' ? 'Save card' : 'حفظ';
@@ -119,7 +118,7 @@
           paymentMethods: ['card'],
           elementId: 'paymob',
           disablePay: true,
-          forceSaveCard: paymentFlowType === 'SaveCard' || isMonthlyDonation === 'true' || isMonthlyDonation === true,
+          forceSaveCard: paymentFlowType === 'SaveCard',
           showSaveCard: paymentFlowType !== 'SaveCard',
           customStyle: {
             ...(language === 'ar' && {
