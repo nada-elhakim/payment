@@ -1,59 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/styles.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.css"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.js"
-      type="module"
-    ></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/paymob-pixel@latest/main.js" type="module"></script>
     <style>
-      html,
-      body {
-        font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+      html, body {
+        font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
         height: 100%;
         overflow: auto;
         background-color: #fdfdf6;
       }
-
-      a {
-        color: #00b7ff;
-      }
-
-      .container,
-      .content {
-        height: 100%;
-        background-color: red;
-      }
-
       #paymob {
         background-color: #fdfdf6;
         padding: 16px;
       }
-
-      /*div.copyrights_elementsContainer__n9fhi {*/
-      /*  display: none;*/
-      /*  visibility: hidden;*/
-      /*}*/
-
-      img[alt='cvv info'] {
-        display: none;
-        visibility: hidden;
-      }
-
-      /*div:has(> img[alt='paymob']) {*/
-      /*  display: none;*/
-      /*}*/
-
       #payFromOutsideButton {
         padding: 16px;
         background: #2b772b;
@@ -64,64 +27,105 @@
         display: block;
         margin: auto;
       }
-
-      #payFromOutsideButton:hover,
-      #payFromOutsideButton:focus {
+      #payFromOutsideButton:hover, #payFromOutsideButton:focus {
         background-color: #0e3b0e;
       }
-
-      #paymob img[class*='copyrights_logo'] {
-       display: none !important;
-      }
-
-      #paymob img[alt='paymob'] {
-       display: none !important;
+      #paymob img[class*="copyrights_logo"], #paymob img[alt="paymob"] {
+        display: none !important;
       }
     </style>
+    <script>
+      window.clientSecret = '${clientSecret.replace(/'/g, "\\'")}';
+      window.publicKey = '${publicKey.replace(/'/g, "\\'")}';
+      window.language = '${lang.replace(/'/g, "\\'")}';
+      window.paymentFlowType = '${flowType.replace(/'/g, "\\'")}';
+    </script>
   </head>
   <body>
     <div id="container">
       <div id="content">
         <div id="paymob"></div>
-        <button id="payFromOutsideButton">
-          <p id="payText"></p>
-        </button>
+        <button id="payFromOutsideButton"><p id="payText"></p></button>
       </div>
     </div>
     <script>
-      window.onload = function () {
-        const button = document.getElementById('payFromOutsideButton');
-        const payText = document.getElementById('payText');
-        const paymentFlowType = window.paymentFlowType;
-        const language = window.language || 'en';
-        const publicKey = window.publicKey || '';
-        const secretKey = window.token || '';
+      function getConfigValue(key, defaultValue = null) {
+        if (typeof window[key] !== "undefined") return window[key];
+        const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+          const [k, v] = cookie.trim().split("=");
+          if (k && v) acc[k] = decodeURIComponent(v);
+          return acc;
+        }, {});
+        if (cookies[key]) return cookies[key];
+        const params = new URLSearchParams(window.location.search);
+        return params.get(key) || defaultValue;
+      }
 
-        if (paymentFlowType === 'SaveCard') {
-          payText.innerText = language === 'en' ? 'Save card' : 'حفظ';
-        } else {
-          payText.innerText = language === 'en' ? 'Pay': 'دفع';
+      window.onload = function () {
+        const payButton = document.getElementById("payFromOutsideButton");
+        const payText = document.getElementById("payText");
+        const paymentFlowType = getConfigValue("paymentFlowType", "Pay");
+        const language = getConfigValue("language", "en");
+        const publicKey = getConfigValue("publicKey");
+        const secretKey = getConfigValue("clientSecret");
+
+        if (!publicKey || !secretKey) {
+          console.error("Missing required configuration: publicKey or clientSecret");
+          return;
         }
+
+        if (paymentFlowType === "SaveCard") {
+          payText.innerText = language === "en" ? "Save card" : "حفظ";
+        } else {
+          payText.innerText = language === "en" ? "Pay" : "دفع";
+        }
+
+        payButton.disabled = true;
+        payButton.style.opacity = "0.6";
+        payButton.style.cursor = "not-allowed";
 
         new Pixel({
           publicKey,
-          afterPaymentComplete: async (response) => {
-            // alert(JSON.stringify(response));
-            // Remove button loading here
-            // payText.innerText = 'Pay';
-            // alert('success');
-            window.ReactNativeWebView.postMessage(
-              JSON.stringify({ afterPaymentComplete: response })
-            );
-          },
-          clientSecret: secretKey || 'egy_csk_test_11d569a458297c7f783a2d92a886dab5',
-          paymentMethods: ['card'],
-          elementId: 'paymob',
+          clientSecret: secretKey,
+          paymentMethods: ["card"],
+          elementId: "paymob",
           disablePay: true,
-          forceSaveCard: paymentFlowType === 'SaveCard',
-          showSaveCard: paymentFlowType !== 'SaveCard',
+          forceSaveCard: paymentFlowType === "SaveCard",
+          showSaveCard: paymentFlowType !== "SaveCard",
+          afterPaymentComplete: async (response) => {
+            console.log("💳 Payment complete", response);
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ afterPaymentComplete: response }));
+            }
+          },
+          cardValidationChanged: (isValid) => {
+            payButton.disabled = !isValid;
+            payButton.style.opacity = isValid ? "1" : "0.6";
+            payButton.style.cursor = isValid ? "pointer" : "not-allowed";
+          },
           customStyle: {
-            ...(language === 'ar' && {
+            Font_Family: 'Gotham',
+            Font_Size_Label: '16',
+            Font_Size_Input_Fields: '16',
+            Font_Size_Payment_Button: '14',
+            Font_Weight_Label: 400,
+            Font_Weight_Input_Fields: 200,
+            Font_Weight_Payment_Button: 600,
+            Color_Container: '#FDFDF6',
+            Color_Border_Input_Fields: '#D0D5DD',
+            Color_Border_Payment_Button: '#A1B8FF',
+            Radius_Border: '8',
+            Color_Disabled: '#A1B8FF',
+            Color_Error: '#CC1142',
+            Color_Primary: '#2B772B',
+            Color_Input_Fields: '#FFF',
+            Text_Color_For_Label: '#000',
+            Text_Color_For_Payment_Button: '#FFF',
+            Text_Color_For_Input_Fields: '#000',
+            Color_For_Text_Placeholder: '#667085',
+            Width_of_Container: '100%',
+            Vertical_Padding: '40',
+            ...(language === "ar" && {
               Direction: 'rtl',
               Label_Text: {
                 cardLabel: 'بيانات البطاقة',
@@ -163,60 +167,27 @@
                   'هو رمز مكون من 4 أرقام موجود في الجهة الأمامية فوق رقم البطاقة.',
               },
             }),
-            Font_Family: 'Gotham',
-            Font_Size_Label: '16',
-            Font_Size_Input_Fields: '16',
-            Font_Size_Payment_Button: '14',
-            Font_Weight_Label: 400,
-            Font_Weight_Input_Fields: 200,
-            Font_Weight_Payment_Button: 600,
-            Color_Container: '#FDFDF6',
-            Color_Border_Input_Fields: '#D0D5DD',
-            Color_Border_Payment_Button: '#A1B8FF',
-            Radius_Border: '8',
-            Color_Disabled: '#A1B8FF',
-            Color_Error: '#CC1142',
-            Color_Primary: '#2B772B',
-            Color_Input_Fields: '#FFF',
-            Text_Color_For_Label: '#000',
-            Text_Color_For_Payment_Button: '#FFF',
-            Text_Color_For_Input_Fields: '#000',
-            Color_For_Text_Placeholder: '#667085',
-            Width_of_Container: '100%',
-            Vertical_Padding: '40',
           },
         });
-        button?.addEventListener('click', function () {
-          // Calling pay request
-          // Add button loading here
-          const event = new Event('payFromOutside');
+
+        payButton.addEventListener("click", function () {
+          const event = new Event("payFromOutside");
           window.dispatchEvent(event);
-          payText.innerText = 'Loading...';
+          payText.innerText = language === "ar" ? "جاري التحميل" : "Loading...";
         });
 
-        // Hide Paymob logo when it becomes available
         let count = 0;
         const interval = setInterval(() => {
-          const host = document.querySelector('#paymob div');
+          const host = document.querySelector("#paymob div");
           count++;
-        
-          // Wait for shadow root
           if (host && host.shadowRoot) {
-        
             const images = host.shadowRoot.querySelectorAll("img[class*='copyrights_logo']");
-        
             if (images.length > 0) {
-              images.forEach((img) => {
-                img.parentElement?.remove();
-              });
+              images.forEach((img) => img.parentElement?.remove());
             }
           }
-
-          if (count >= 100) {
-            clearInterval(interval); // Stop checking
-          }
-    
-        }, 250); // Check every 250ms
+          if (count >= 100) clearInterval(interval);
+        }, 100);
       };
     </script>
   </body>
